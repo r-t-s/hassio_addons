@@ -1,5 +1,5 @@
 #!/usr/bin/python
-import json, os, shutil, subprocess, time
+import json, os, shutil, signal, subprocess, time
 from pprint import pprint
 from glob import glob
 
@@ -14,7 +14,7 @@ def ProcessTopLevel(domain):
     environment["LE_WORKING_DIR"] = config_dir
     environment["DEPLOY_LOCALCOPY_RELOADCMD"] = "/notify.sh"
     environment["DEPLOY_TARGET"] = main_domain
-    issue_opts = domain["install_options"]
+    issue_opts = domain["issue_options"]
     ## --debug 2
     issue_options = [config_dir + "/acme.sh", "--issue", "-d", main_domain, "--log"]
     deploy_opts = domain["deploy_options"]
@@ -42,7 +42,7 @@ def ProcessTopLevel(domain):
             fullchain = cert_dir + "/" + "fullchain.cer"
             print("Checking for new cert in:" + cert_dir)
             if os.path.exists(fullchain):
-                printf("File exists:" + fullchain)
+                print("File exists:" + fullchain)
                 if os.path.getmtime(fullchain) > stamp:
                     for opt in deploy_opts:
                         strs = opt.split()
@@ -52,6 +52,7 @@ def ProcessTopLevel(domain):
                     p = subprocess.Popen(deploy_options, cwd= config_dir, env= environment)
                     p.wait()
 
+print("Starting acme.sh Certificates addon!")
 
 if os.path.exists('/data/options.json'):
     with open('/data/options.json', 'r') as json_file:
@@ -76,3 +77,5 @@ if json_data:
         domains = json_data["domains"]
         for domain in domains:
             ProcessTopLevel(domain)
+
+signal.pause()
