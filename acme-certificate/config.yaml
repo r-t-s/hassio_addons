@@ -1,0 +1,26 @@
+name: acme.sh Certificates
+description: Use acme.sh to create SSL certificates
+version: "1.0.0"
+slug: "acme-sh-certificates"
+init: false
+homeassistant_api: true
+arch:
+  - aarch64
+  - amd64
+map:
+  - type: ssl
+    read_only: false
+  - type: homeassistant_config
+    read_only: false
+options:
+  email: ""
+  config_sub_dicrectory: ""
+  domains: null
+schema:
+  email: email
+  config_sub_dicrectory: match(^[a-z][a-z0-9._]+$)
+  domains:
+    - domain: str
+      install_options: [str]
+      deploy_options: [str]
+      environment: [str]
