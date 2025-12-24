@@ -67,7 +67,7 @@ if json_data:
 
     user_email = json_data["email"]
     if user_email:
-        p = subprocess.Popen(["./acme.sh", "--install", "--home", config_dir, "-m", user_email], cwd="/acme.sh")
+        p = subprocess.Popen(["./acme.sh", "--install", "--no-cron", "--home", config_dir, "-m", user_email], cwd="/acme.sh")
         p.wait()
 
         local_deploy = config_dir + "/deploy/localcopy.sh"
@@ -77,5 +77,10 @@ if json_data:
         domains = json_data["domains"]
         for domain in domains:
             ProcessTopLevel(domain)
+
+        while True:
+            time.sleep(3600 * 24)
+            p = subprocess.Popen(["./acme.sh", "--cron", "--home", config_dir], cwd= config_dir)
+            p.wait()
 
 signal.pause()
