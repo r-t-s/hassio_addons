@@ -31,11 +31,11 @@ def ProcessTopLevel(domain):
     for opt in issue_opts:
         strs = opt.split()
         issue_options.extend(strs)
-    print(issue_options)
+    print(issue_options, flush=True)
 
     p = subprocess.Popen(issue_options, cwd= config_dir, env= environment)
     p.wait()
-    print("Cheching for:" + main_domain + "*" + " in " + config_dir)
+    print("Cheching for:" + main_domain + "*" + " in " + config_dir, flush=True)
     for dir in glob(main_domain + "*", root_dir=config_dir):
         cert_dir = config_dir + "/" + dir
         if os.path.getmtime(cert_dir) > stamp:
@@ -47,18 +47,18 @@ def ProcessTopLevel(domain):
                     for opt in deploy_opts:
                         strs = opt.split()
                         deploy_options.extend(strs)
-                    print(deploy_options)
-
+                    print(deploy_options, flush=True)
                     p = subprocess.Popen(deploy_options, cwd= config_dir, env= environment)
                     p.wait()
 
-print("Starting acme.sh Certificates addon!")
+print("Starting acme.sh Certificates addon!", flush=True)
 
 if os.path.exists('/data/options.json'):
     with open('/data/options.json', 'r') as json_file:
         json_data = json.load(json_file)
         json_file.close()
         pprint(json_data)
+        print("", flush=True)
 
 if json_data:
     config_dir = "/config/" + json_data["config_sub_dicrectory"]
@@ -79,7 +79,8 @@ if json_data:
             ProcessTopLevel(domain)
 
         while True:
-            time.sleep(3600 * 24)
+            time.sleep(3600 * 48)
+            print("Cron Processing", flush=True)
             p = subprocess.Popen(["./acme.sh", "--cron", "--home", config_dir], cwd= config_dir)
             p.wait()
 
