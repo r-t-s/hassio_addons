@@ -39,10 +39,11 @@ def ProcessTopLevel(domain):
     for dir in glob(main_domain + "*", root_dir=config_dir):
         cert_dir = config_dir + "/" + dir
         fullchain = cert_dir + "/" + "fullchain.cer"
-        print("Checking for new cert in:" + cert_dir)
+        print("Checking for updated:" + fullchain)
         if os.path.exists(fullchain):
             print("File exists:" + fullchain)
             if os.path.getmtime(fullchain) > stamp:
+                print("File Updated:" + fullchain)
                 for opt in deploy_opts:
                     strs = opt.split()
                     deploy_options.extend(strs)

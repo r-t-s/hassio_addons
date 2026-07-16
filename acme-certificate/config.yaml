@@ -1,6 +1,6 @@
 name: acme.sh Certificate
 description: Use acme.sh to create SSL certificate
-version: "1.001.1"
+version: "1.002.1"
 slug: "acme-sh-certificate"
 init: false
 homeassistant_api: true
