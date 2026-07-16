@@ -22,6 +22,7 @@ domains:
   - domain: XYZZYha.duckdns.org
     issue_options:
       - "-d XYZZYhal.duckdns.org"
+      - "--days -5"
       - "--dns dns_duckdns"
       - "--server letsencrypt"
     deploy_options:

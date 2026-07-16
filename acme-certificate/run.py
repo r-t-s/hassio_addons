@@ -38,18 +38,17 @@ def ProcessTopLevel(domain):
     print("Cheching for:" + main_domain + "*" + " in " + config_dir, flush=True)
     for dir in glob(main_domain + "*", root_dir=config_dir):
         cert_dir = config_dir + "/" + dir
-        if os.path.getmtime(cert_dir) > stamp:
-            fullchain = cert_dir + "/" + "fullchain.cer"
-            print("Checking for new cert in:" + cert_dir)
-            if os.path.exists(fullchain):
-                print("File exists:" + fullchain)
-                if os.path.getmtime(fullchain) > stamp:
-                    for opt in deploy_opts:
-                        strs = opt.split()
-                        deploy_options.extend(strs)
-                    print(deploy_options, flush=True)
-                    p = subprocess.Popen(deploy_options, cwd= config_dir, env= environment)
-                    p.wait()
+        fullchain = cert_dir + "/" + "fullchain.cer"
+        print("Checking for new cert in:" + cert_dir)
+        if os.path.exists(fullchain):
+            print("File exists:" + fullchain)
+            if os.path.getmtime(fullchain) > stamp:
+                for opt in deploy_opts:
+                    strs = opt.split()
+                    deploy_options.extend(strs)
+                print(deploy_options, flush=True)
+                p = subprocess.Popen(deploy_options, cwd= config_dir, env= environment)
+                p.wait()
 
 print("Starting acme.sh Certificates addon!", flush=True)
 
@@ -69,10 +68,6 @@ if json_data:
     if user_email:
         p = subprocess.Popen(["./acme.sh", "--install", "--no-cron", "--home", config_dir, "-m", user_email], cwd="/acme.sh")
         p.wait()
-
-        local_deploy = config_dir + "/deploy/localcopy.sh"
-        if not os.path.exists(local_deploy):
-            shutil.copy2("/localcopy.sh", local_deploy)
 
         domains = json_data["domains"]
         for domain in domains:
